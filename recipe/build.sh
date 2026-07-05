@@ -24,5 +24,5 @@ cmake .. \
   -DENABLE_PYTHIA6=Off
 
 NPROC=$(nproc 2>/dev/null || sysctl -n hw.ncpu)
-make -j"$NPROC"
+make VERBOSE=1 -j"$NPROC"
 make install
