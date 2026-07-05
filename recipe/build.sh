@@ -4,6 +4,10 @@ set -e
 mkdir -p build
 cd build
 
+# upstream's CMakeLists.txt asks for CMake 2.6 -- modern CMake dropped
+# compatibility with anything below 3.5 outright.
+export CMAKE_POLICY_VERSION_MINIMUM=3.5
+
 cmake .. \
   -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
   -DCMAKE_BUILD_TYPE=Release \
