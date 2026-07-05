@@ -1,0 +1,20 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,6 +46,17 @@
+ 
+ # define project
+ project(starlight)
++
++# conda: force $PREFIX/include onto the search path unconditionally.
++# This project's own set(CMAKE_CXX_FLAGS "...") calls (further below)
++# unconditionally OVERWRITE CMAKE_CXX_FLAGS, discarding the -isystem
++# $PREFIX/include conda-build seeds via the environment, and the legacy
++# HEPMC3_INCLUDE_DIR variable this file relies on for HepMC3 headers is
++# never populated by HepMC3's modern target-based CMake config -- so
++# without this, no $PREFIX/include ever reaches the compiler at all.
++if(DEFINED ENV{PREFIX})
++  include_directories(SYSTEM $ENV{PREFIX}/include)
++endif()
+ #find_package (Threads)
+ 
+ # load some common cmake macros
