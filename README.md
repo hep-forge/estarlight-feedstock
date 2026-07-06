@@ -11,6 +11,16 @@ Builds linux-amd64 + linux-arm64 in one matrix workflow and uploads to the
 
 Monte Carlo for coherent vector meson photo-/electro-production in electron-ion collisions
 
+## Architectures
+
+| Architecture | Latest published |
+|--------------|------------------|
+| linux-amd64 (`linux-64`) | ✅ `1.2.0` |
+| linux-arm64 (`linux-aarch64`) | ✅ `1.2.0` |
+
+_As of the last feedstock render; the badges above are live._
+
+
 ## Install
 
 ```bash
@@ -20,3 +30,4 @@ conda install -c hep-forge -c conda-forge estarlight
 ## Maintainers
 
 * [@meiyasan](https://github.com/meiyasan/)
+
