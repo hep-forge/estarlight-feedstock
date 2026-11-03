@@ -7,11 +7,6 @@ cd build
 # upstream's CMakeLists.txt asks for CMake 2.6 -- modern CMake dropped
 # compatibility with anything below 3.5 outright.
 export CMAKE_POLICY_VERSION_MINIMUM=3.5
-# eStarlight builds with -Werror; clang adds -Warray-parameter, which GCC
-# does not have, and its sources trip it
-if [[ "$(uname)" == "Darwin" ]]; then
-  export CXXFLAGS="${CXXFLAGS} -Wno-error=array-parameter"
-fi
 
 # Belt and suspenders on top of patches/force-prefix-include.patch: in
 # the real cross-compiling conda-build environment (x86_64-conda-linux-gnu-c++,
@@ -34,7 +29,14 @@ export CPLUS_INCLUDE_PATH="${PREFIX}/include${CPLUS_INCLUDE_PATH:+:$CPLUS_INCLUD
 # patches/force-prefix-include.patch instead, since forcing that variable
 # alone did not reach the actual compile flags (this project's own
 # set(CMAKE_CXX_FLAGS "...") calls clobber the include path a different way).
-cmake .. \
+# eStarlight builds with -Werror and clang's -Warray-parameter trips on its
+# sources; see recipe/no-werror-array-parameter.cmake
+EXTRA_ARGS=()
+if [[ "$(uname)" == "Darwin" ]]; then
+  EXTRA_ARGS+=(-DCMAKE_PROJECT_INCLUDE="${RECIPE_DIR}/no-werror-array-parameter.cmake")
+fi
+
+cmake .. "${EXTRA_ARGS[@]}" \
   -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
   -DCMAKE_BUILD_TYPE=Release \
   -DENABLE_HEPMC3=On \
