@@ -7,6 +7,11 @@ cd build
 # upstream's CMakeLists.txt asks for CMake 2.6 -- modern CMake dropped
 # compatibility with anything below 3.5 outright.
 export CMAKE_POLICY_VERSION_MINIMUM=3.5
+# eStarlight builds with -Werror; clang adds -Warray-parameter, which GCC
+# does not have, and its sources trip it
+if [[ "$(uname)" == "Darwin" ]]; then
+  export CXXFLAGS="${CXXFLAGS} -Wno-error=array-parameter"
+fi
 
 # Belt and suspenders on top of patches/force-prefix-include.patch: in
 # the real cross-compiling conda-build environment (x86_64-conda-linux-gnu-c++,
@@ -33,7 +38,7 @@ cmake .. \
   -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
   -DCMAKE_BUILD_TYPE=Release \
   -DENABLE_HEPMC3=On \
-  -DHEPMC3_LIB="${PREFIX}/lib/libHepMC3.so" \
+  -DHEPMC3_LIB="${PREFIX}/lib/libHepMC3${SHLIB_EXT}" \
   -DENABLE_PYTHIA=Off \
   -DENABLE_PYTHIA6=Off
 
